@@ -1,8 +1,7 @@
-# GearOS
+# xenomai
 
 #### Description
 GearOS is a real-time enhanced operating system for the industrial control field incubated by the openEuler open-source community Industrial-Control SIG.
-
 #### Software Architecture
 Software architecture description
 
