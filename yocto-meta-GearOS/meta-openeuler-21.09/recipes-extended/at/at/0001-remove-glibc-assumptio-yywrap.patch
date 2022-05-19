@@ -1,0 +1,61 @@
+diff --git a/config.h.in b/config.h.in
+index 681d68e..20b9215 100644
+--- a/config.h.in
++++ b/config.h.in
+@@ -143,7 +143,7 @@
+ #undef HAVE_WAITPID
+ 
+ /* Define to 1 if we need to provide our own yywrap() */
+-#undef NEED_YYWRAP
++#define NEED_YYWRAP 
+ 
+ /* Define to 1 if your `struct nlist' has an `n_un' member. Obsolete, depend
+    on `HAVE_STRUCT_NLIST_N_UN_N_NAME */
+diff --git a/parsetime.l b/parsetime.l
+index d695db5..2b3b287 100644
+--- a/parsetime.l
++++ b/parsetime.l
+@@ -83,7 +83,7 @@ utc		{ COPY_TOK ; return UTC; }
+ 
+ %%
+ 
+-#ifdef NEED_YYWRAP
++#if 1//def NEED_YYWRAP
+ int yywrap()
+ {
+     return 1;
+diff --git a/parsetime.y b/parsetime.y
+index ff5db31..05ea433 100644
+--- a/parsetime.y
++++ b/parsetime.y
+@@ -7,6 +7,8 @@
+ #include "panic.h"
+ 
+ #define YYDEBUG 1
++#define is_leap_year(y) \
++    ((y) % 4 == 0 && ((y) % 100 != 0 || (y) % 400 == 0))
+ 
+ struct tm exectm;
+ static int isgmt;
+@@ -217,8 +219,8 @@ date            : month_name day_number
+ 				 mnum == 12) && dnum > 31)
+ 			    || ((mnum ==  4 || mnum ==  6 || mnum ==  9 ||
+ 			         mnum == 11) && dnum > 30)
+-			    || (mnum ==  2 && dnum > 29 &&  __isleap(ynum+1900))
+-			    || (mnum ==  2 && dnum > 28 && !__isleap(ynum+1900))
++			    || (mnum ==  2 && dnum > 29 &&  is_leap_year(ynum+1900))
++			    || (mnum ==  2 && dnum > 28 && !is_leap_year(ynum+1900))
+ 			   )
+ 			{
+ 			    yyerror("Error in day of month");
+@@ -261,8 +263,8 @@ date            : month_name day_number
+ 				 mnum == 12) && dnum > 31)
+ 			    || ((mnum ==  4 || mnum ==  6 || mnum ==  9 ||
+ 			         mnum == 11) && dnum > 30)
+-			    || (mnum ==  2 && dnum > 29 &&  __isleap(ynum+1900))
+-			    || (mnum ==  2 && dnum > 28 && !__isleap(ynum+1900))
++			    || (mnum ==  2 && dnum > 29 &&  is_leap_year(ynum+1900))
++			    || (mnum ==  2 && dnum > 28 && !is_leap_year(ynum+1900))
+ 			   )
+ 			{
+ 			    yyerror("Error in day of month");

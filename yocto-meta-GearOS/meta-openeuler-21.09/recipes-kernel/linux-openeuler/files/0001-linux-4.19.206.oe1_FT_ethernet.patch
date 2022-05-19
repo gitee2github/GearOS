@@ -1,0 +1,1325 @@
+diff -uprN kernel/arch/arm64/include/asm/cputype.h kernel_new/arch/arm64/include/asm/cputype.h
+--- kernel/arch/arm64/include/asm/cputype.h	2021-09-24 17:53:47.395317270 +0800
++++ kernel_new/arch/arm64/include/asm/cputype.h	2021-09-28 09:31:00.784462589 +0800
+@@ -65,6 +65,8 @@
+ #define ARM_CPU_IMP_ARM			0x41
+ #define ARM_CPU_IMP_APM			0x50
+ #define ARM_CPU_IMP_CAVIUM		0x43
++#define ARM_CPU_IMP_PHYTIUM		0x70
++
+ #define ARM_CPU_IMP_BRCM		0x42
+ #define ARM_CPU_IMP_QCOM		0x51
+ #define ARM_CPU_IMP_NVIDIA		0x4E
+@@ -84,6 +86,11 @@
+ #define ARM_CPU_PART_NEOVERSE_N1	0xD0C
+ 
+ #define APM_CPU_PART_POTENZA		0x000
++#define PHYTIUM_CPU_PART_1500A		0X660
++#define PHYTIUM_CPU_PART_2000AHK	0X661
++#define PHYTIUM_CPU_PART_2000PLUS	0X662
++#define PHYTIUM_CPU_PART_2000A_4	0X663
++#define PHYTIUM_CPU_PART_2500		0X663
+ 
+ #define CAVIUM_CPU_PART_THUNDERX	0x0A1
+ #define CAVIUM_CPU_PART_THUNDERX_81XX	0x0A2
+@@ -110,6 +117,11 @@
+ #define MIDR_CORTEX_A72 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A72)
+ #define MIDR_CORTEX_A73 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A73)
+ #define MIDR_CORTEX_A75 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A75)
++#define MIDR_FT_1500A	MIDR_CPU_MODEL(ARM_CPU_IMP_PHYTIUM, PHYTIUM_CPU_PART_1500A)
++#define MIDR_FT_2000AHK	MIDR_CPU_MODEL(ARM_CPU_IMP_PHYTIUM, PHYTIUM_CPU_PART_2000AHK)
++#define MIDR_FT_2000PLUS	MIDR_CPU_MODEL(ARM_CPU_IMP_PHYTIUM, PHYTIUM_CPU_PART_2000PLUS)
++#define MIDR_FT_2000A_4        MIDR_CPU_MODEL(ARM_CPU_IMP_PHYTIUM, PHYTIUM_CPU_PART_2000A_4)
++#define MIDR_FT_2500	MIDR_CPU_MODEL(ARM_CPU_IMP_PHYTIUM, PHYTIUM_CPU_PART_2500)
+ #define MIDR_CORTEX_A35 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A35)
+ #define MIDR_CORTEX_A55 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A55)
+ #define MIDR_CORTEX_A76 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A76)
+diff -uprN kernel/arch/arm64/include/asm/machine_t.h kernel_new/arch/arm64/include/asm/machine_t.h
+--- kernel/arch/arm64/include/asm/machine_t.h	1970-01-01 08:00:00.000000000 +0800
++++ kernel_new/arch/arm64/include/asm/machine_t.h	2021-09-28 09:31:00.784462589 +0800
+@@ -0,0 +1,90 @@
++/*
++ *  Authors: Jackie Liu <liuyun01@kylinos.cn>
++ *
++ *  Copyright (C) 2018,Tianjin KYLIN Information Technology Co., Ltd.
++ *
++ *  This library is free software; you can redistribute it and/or
++ *  modify it under the terms of the GNU Lesser General Public
++ *  License as published by the Free Software Foundation; either
++ *  version 2 of the License, or (at your option) any later version.
++ *
++ *  This library is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ *  Lesser General Public License for more details.
++ *
++ *  You should have received a copy of the GNU Lesser General Public
++ *  License along with this library; if not, write to the
++ *  Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
++ *  Boston, MA 02110-1301, USA.
++ */
++
++#ifndef _MACHINE_TYPE_H_
++#define _MACHINE_TYPE_H_
++
++#include <linux/types.h>
++#include <linux/acpi.h>
++#include <asm/phytium_platform.h>
++
++int acpi_init_cpu_type(void);
++bool phytium_get_cpu_type(u32 cpu_type);
++
++/**
++ * Phytium CPU VENDOER_ID defined as:
++ * SIGNATURE_32 ('P','H','Y','T') in bios
++ */
++#define PHYTIUM_VENDOER_ID	0x54594850
++
++/* phytium2000a4 */
++#define ACPI_FT2000_4_X		0x000300
++#define ACPI_FT2000_4		0x000301
++#define ACPI_FT2000_4_S		0x000302
++#define ACPI_FT2000_4_I		0x000303
++#define ACPI_FT2000_4_SI	0x000304
++#define ACPI_FT2000_4_2		0x000305
++#define ACPI_FT2000_4_I2	0x000306
++#define ACPI_FT2000_4_I1	0x000307
++#define ACPI_FT2000_4_M		0x000308
++
++/* phytium2500 */
++#define ACPI_S2500_64		0x000400
++#define ACPI_S2500_64_C00	0x000401
++#define ACPI_S2500_64_I00	0x000402
++#define ACPI_S2500_56_C00	0x000403
++#define ACPI_S2500_56_I00	0x000404
++#define ACPI_S2500_48_C00	0x000405
++#define ACPI_S2500_48_I00	0x000406
++
++/* phytiumD2000 */
++#define ACPI_D2000_8		0x000500
++#define ACPI_D2000_8_B8C	0x000501
++#define ACPI_D2000_8_E8C	0x000502
++#define ACPI_D2000_8_S8C	0x000503
++#define ACPI_D2000_8_S8I	0x000504
++#define ACPI_D2000_4_S4C	0x000505
++#define ACPI_D2000_4_S4I	0x000506
++
++#define is_ft1500a()	is_part(MIDR_FT_1500A)
++#define is_ft2000ahk()	is_part(MIDR_FT_2000AHK)
++#define is_ft2000plus()	is_part(MIDR_FT_2000PLUS)
++//#define is_ft2500()	phytium_get_cpu_type(ACPI_S2500_64)
++#define is_ft2500()	0
++/* for phytium D2000 */
++//#define is_ftd2000()	phytium_get_cpu_type(ACPI_D2000_8)
++#define is_ftd2000() 0
++/* for phytium D2000, FT2000a4 */
++#define is_ft2000_pc()	(is_part(MIDR_FT_2000A_4) && !is_ft2500())
++/* Forward compatible, Suggest not to use this interface */
++#define is_ft2000a4()	is_part(MIDR_FT_2000A_4)
++#define is_ft_all()	is_implementer(ARM_CPU_IMP_PHYTIUM)
++
++#define is_kunpeng920()	is_part(MIDR_HISI_TSV110)
++#define is_hisi()	is_implementer(ARM_CPU_IMP_HISI)
++
++extern int acpi_cpu_type;
++extern u32 phytium_platform_id;
++struct cpu_mode_desc {
++	u32 midr_model;
++	char *desc;
++};
++#endif
+diff -uprN kernel/arch/arm64/include/asm/phytium_platform.h kernel_new/arch/arm64/include/asm/phytium_platform.h
+--- kernel/arch/arm64/include/asm/phytium_platform.h	1970-01-01 08:00:00.000000000 +0800
++++ kernel_new/arch/arm64/include/asm/phytium_platform.h	2021-09-28 09:31:00.784462589 +0800
+@@ -0,0 +1,16 @@
++#ifndef __PHYPIUM_PLATFORM__
++#define __PHYPIUM_PLATFORM__
++
++#include <asm/cputype.h>
++
++/********************* for all Phytium CPUs ******************/
++static inline bool is_part(u32 cpuid)
++{
++	return ((read_cpuid_id() & MIDR_CPU_MODEL_MASK) == cpuid);
++}
++
++static inline bool is_implementer(u32 implementer)
++{
++	return ((read_cpuid_implementor() == implementer));
++}
++#endif
+diff -uprN kernel/drivers/net/ethernet/stmicro/stmmac/common.h kernel_new/drivers/net/ethernet/stmicro/stmmac/common.h
+--- kernel/drivers/net/ethernet/stmicro/stmmac/common.h	2021-09-24 17:53:53.465310104 +0800
++++ kernel_new/drivers/net/ethernet/stmicro/stmmac/common.h	2021-09-28 09:31:00.784462589 +0800
+@@ -256,7 +256,7 @@ struct stmmac_safety_stats {
+ 
+ /* Max/Min RI Watchdog Timer count value */
+ #define MAX_DMA_RIWT		0xff
+-#define MIN_DMA_RIWT		0x20
++#define MIN_DMA_RIWT		0x10
+ /* Tx coalesce parameters */
+ #define STMMAC_COAL_TX_TIMER	1000
+ #define STMMAC_MAX_COAL_TX_TICK	100000
+diff -uprN kernel/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c kernel_new/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c
+--- kernel/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c	2021-09-24 17:53:53.465310104 +0800
++++ kernel_new/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c	2021-09-28 09:31:00.784462589 +0800
+@@ -12,6 +12,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/acpi.h>
+ 
+ #include "stmmac.h"
+ #include "stmmac_platform.h"
+@@ -32,6 +33,12 @@ static int dwmac_generic_probe(struct pl
+ 			dev_err(&pdev->dev, "dt configuration failed\n");
+ 			return PTR_ERR(plat_dat);
+ 		}
++	} else if (has_acpi_companion(&pdev->dev)) {
++		plat_dat = stmmac_probe_config_acpi(pdev, &stmmac_res.mac);
++		if (!plat_dat) {
++			dev_err(&pdev->dev, "acpi configuration failed\n");
++			return  -EINVAL;
++		}
+ 	} else {
+ 		plat_dat = dev_get_platdata(&pdev->dev);
+ 		if (!plat_dat) {
+@@ -69,6 +76,7 @@ err_remove_config_dt:
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_OF
+ static const struct of_device_id dwmac_generic_match[] = {
+ 	{ .compatible = "st,spear600-gmac"},
+ 	{ .compatible = "snps,dwmac-3.50a"},
+@@ -83,6 +91,15 @@ static const struct of_device_id dwmac_g
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, dwmac_generic_match);
++#endif
++
++#ifdef CONFIG_ACPI
++static const struct acpi_device_id dwmac_acpi_ids[] = {
++	{.id="FTGM0001"},
++	{},
++};
++MODULE_DEVICE_TABLE(acpi, dwmac_acpi_ids);
++#endif
+ 
+ static struct platform_driver dwmac_generic_driver = {
+ 	.probe  = dwmac_generic_probe,
+@@ -90,7 +107,12 @@ static struct platform_driver dwmac_gene
+ 	.driver = {
+ 		.name           = STMMAC_RESOURCE_NAME,
+ 		.pm		= &stmmac_pltfr_pm_ops,
++#ifdef CONFIG_OF
+ 		.of_match_table = of_match_ptr(dwmac_generic_match),
++#endif
++#ifdef CONFIG_ACPI
++		.acpi_match_table = ACPI_PTR(dwmac_acpi_ids),
++#endif
+ 	},
+ };
+ module_platform_driver(dwmac_generic_driver);
+diff -uprN kernel/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c kernel_new/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+--- kernel/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c	2021-09-24 17:53:53.475310092 +0800
++++ kernel_new/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c	2021-09-28 09:31:00.784462589 +0800
+@@ -25,6 +25,8 @@
+ #include <linux/phy.h>
+ #include <linux/net_tstamp.h>
+ #include <asm/io.h>
++#include <linux/nvmem-provider.h>
++#include <linux/nvmem-consumer.h>
+ 
+ #include "stmmac.h"
+ #include "dwmac_dma.h"
+@@ -415,13 +417,15 @@ static void stmmac_ethtool_setmsglevel(s
+ 
+ }
+ 
++#if (!defined CONFIG_MIPS) && (!defined CONFIG_ARM64)
+ static int stmmac_check_if_running(struct net_device *dev)
+ {
+ 	if (!netif_running(dev))
+ 		return -EBUSY;
+ 	return 0;
+ }
+-
++#endif
++ 
+ static int stmmac_ethtool_get_regs_len(struct net_device *dev)
+ {
+ 	return REG_SPACE_SIZE;
+@@ -734,6 +738,78 @@ static u32 stmmac_riwt2usec(u32 riwt, st
+ 	return (riwt * 256) / (clk / 1000000);
+ }
+ 
++static int stmmac_get_eeprom_len(struct net_device *netdev)
++{
++	struct stmmac_priv *priv = netdev_priv(netdev);
++        struct nvmem_cell *cell;
++
++        /* try to set mac_addr to nvmem */
++        cell = nvmem_cell_get(priv->device, "mac-address");
++        if (!IS_ERR(cell)) {
++		nvmem_cell_put(cell);
++		return ETH_ALEN;
++        }
++
++        return -1;
++}
++
++static int
++stmmac_get_eeprom(struct net_device *netdev,
++		  struct ethtool_eeprom *eeprom, u8 *bytes)
++{
++	struct stmmac_priv *priv = netdev_priv(netdev);
++	struct nvmem_cell *cell;
++	int ret = -1;
++
++	/* find mac_addr from nvmem cell */
++	cell = nvmem_cell_get(priv->device, "mac-address");
++	if (!IS_ERR(cell)) {
++		size_t len;
++		char *val = nvmem_cell_read(cell, &len);
++
++		if (!IS_ERR(val)) {
++			ether_addr_copy(bytes, val);
++			kfree(val);
++			ret = 0;
++		}
++		nvmem_cell_put(cell);
++	}
++
++	return ret;
++}
++
++static int
++stmmac_set_eeprom(struct net_device *netdev,
++		  struct ethtool_eeprom *eeprom, u8 *bytes)
++{
++	struct stmmac_priv *priv = netdev_priv(netdev);
++	struct nvmem_cell *cell;
++	int ret = -1;
++
++	if (eeprom->offset + eeprom->len > ETH_ALEN)
++		return ret;
++
++	/* try to set mac_addr to nvmem */
++        cell = nvmem_cell_get(priv->device, "mac-address");
++        if (!IS_ERR(cell)) {
++		size_t len;
++                char *val = nvmem_cell_read(cell, &len);
++
++		if (!IS_ERR(val)) {
++			memcpy(val + eeprom->offset, bytes, eeprom->len);
++			ret = nvmem_cell_write(cell, val, ETH_ALEN);
++			if (ret < 0)
++				dev_err(priv->device, "fail to set mac_addr to nvmem cell\n");
++			else
++				ret = eeprom->len;
++			kfree(val);
++		}
++		nvmem_cell_put(cell);
++	}
++
++	return ret;
++}
++
+ static int stmmac_get_coalesce(struct net_device *dev,
+ 			       struct ethtool_coalesce *ec)
+ {
+@@ -869,7 +945,9 @@ static int stmmac_set_tunable(struct net
+ }
+ 
+ static const struct ethtool_ops stmmac_ethtool_ops = {
++#if (!defined CONFIG_MIPS) && (!defined CONFIG_ARM64)
+ 	.begin = stmmac_check_if_running,
++#endif
+ 	.get_drvinfo = stmmac_ethtool_getdrvinfo,
+ 	.get_msglevel = stmmac_ethtool_getmsglevel,
+ 	.set_msglevel = stmmac_ethtool_setmsglevel,
+@@ -877,6 +955,9 @@ static const struct ethtool_ops stmmac_e
+ 	.get_regs_len = stmmac_ethtool_get_regs_len,
+ 	.get_link = ethtool_op_get_link,
+ 	.nway_reset = phy_ethtool_nway_reset,
++	.get_eeprom_len = stmmac_get_eeprom_len,
++	.get_eeprom = stmmac_get_eeprom,
++	.set_eeprom = stmmac_set_eeprom,
+ 	.get_pauseparam = stmmac_get_pauseparam,
+ 	.set_pauseparam = stmmac_set_pauseparam,
+ 	.get_ethtool_stats = stmmac_get_ethtool_stats,
+diff -uprN kernel/drivers/net/ethernet/stmicro/stmmac/stmmac.h kernel_new/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+--- kernel/drivers/net/ethernet/stmicro/stmmac/stmmac.h	2021-09-24 17:53:53.475310092 +0800
++++ kernel_new/drivers/net/ethernet/stmicro/stmmac/stmmac.h	2021-09-28 09:31:00.784462589 +0800
+@@ -182,6 +182,9 @@ struct stmmac_priv {
+ 	u32 adv_ts;
+ 	int use_riwt;
+ 	int irq_wake;
++#ifdef CONFIG_SW
++	int stmmac_index; /* Denote which adapter to use on SICH chipset nic */
++#endif
+ 	spinlock_t ptp_lock;
+ 	void __iomem *mmcaddr;
+ 	void __iomem *ptpaddr;
+diff -uprN kernel/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c kernel_new/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+--- kernel/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c	2021-09-24 17:53:53.475310092 +0800
++++ kernel_new/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c	2021-09-28 09:52:52.919880778 +0800
+@@ -50,10 +50,22 @@
+ #include "stmmac.h"
+ #include <linux/reset.h>
+ #include <linux/of_mdio.h>
++#include <linux/acpi.h>
++#include <linux/nvmem-consumer.h>
++
+ #include "dwmac1000.h"
+ #include "dwxgmac2.h"
+ #include "hwif.h"
+ 
++#if defined(CONFIG_CPU_LOONGSON3)
++#include <linux/i2c.h>
++#include <loongson-pch.h>
++#include <ls7a-spiflash.h>
++
++#define MAC_OFFSET  0x10
++#define MAC_LEN     0x6
++#endif
++
+ #define	STMMAC_ALIGN(x)		ALIGN(ALIGN(x, SMP_CACHE_BYTES), 16)
+ #define	TSO_MAX_BUFF_SIZE	(SZ_16K - 1)
+ 
+@@ -916,6 +928,22 @@ static void stmmac_check_pcs_mode(struct
+ 	}
+ }
+ 
++#ifdef CONFIG_SW
++static void stmmac_sich_setup_leds(struct phy_device *phydev)
++{
++#define BCM_LED_SRC_ACTIVITYLED         0x3
++#define BCM5482_SHD_LEDS2               0x0e    /* 01110: LED Selector 2 */
++#define BCM5482_SHD_LEDS1_LED2(src)     ((src & 0xf) << 4) /* LED1 / ~LINKSPD[1] selector */
++extern int bcm_phy_write_shadow(struct phy_device *phydev, u16 shadow,
++		u16 val);
++		/*
++		 * LED2=ACTIVITYLED, LED4=reserved;
++		* (Use LED1 as secondary SerDes ACTIVITY LED)
++		*/
++		bcm_phy_write_shadow(phydev, BCM5482_SHD_LEDS2,
++		BCM5482_SHD_LEDS1_LED2(BCM_LED_SRC_ACTIVITYLED));
++}
++#endif
+ /**
+  * stmmac_init_phy - PHY initialization
+  * @dev: net device structure
+@@ -997,6 +1025,9 @@ static int stmmac_init_phy(struct net_de
+ 		phydev->irq = PHY_POLL;
+ 
+ 	phy_attached_info(phydev);
++#ifdef CONFIG_SW
++	stmmac_sich_setup_leds(phydev);
++#endif
+ 	return 0;
+ }
+ 
+@@ -1547,6 +1578,15 @@ static int alloc_dma_rx_desc_resources(s
+ 				goto err_dma;
+ 
+ 		} else {
++#ifdef CONFIG_ACPI
++			/* ----lt----configure dma：should be moved to dev probe */
++			static u64 my_mask = 0xffffffff;
++
++			pr_debug("configure device dma\n");
++			acpi_dma_configure(priv->device, DEV_DMA_COHERENT);
++			priv->device->dma_mask = &my_mask;
++			priv->device->coherent_dma_mask = (u32)~0;
++#endif
+ 			rx_q->dma_rx = dma_zalloc_coherent(priv->device,
+ 							   DMA_RX_SIZE *
+ 							   sizeof(struct
+@@ -2127,6 +2167,37 @@ static int stmmac_get_hw_features(struct
+ 	return stmmac_get_hw_feature(priv, priv->ioaddr, &priv->dma_cap) == 0;
+ }
+ 
++static int ft_stmmac_nvmem_set_mac_addr(struct device *dev, unsigned char *mac_addr)
++{
++	struct nvmem_cell *cell;
++	int ret;
++
++	/* try to set mac_addr to nvmem */
++        cell = nvmem_cell_get(dev, "mac-address");
++        if (!IS_ERR(cell)) {
++                ret = nvmem_cell_write(cell, mac_addr, ETH_ALEN);
++		if (ret < 0)
++			dev_err(dev, "fail to set mac_addr to nvmem cell\n");
++		nvmem_cell_put(cell);
++	}
++
++	return 0;
++}
++
++#if defined(CONFIG_CPU_LOONGSON3)
++static int stmmac_spi_flash_get_mac_addr(struct stmmac_priv *priv, unsigned char *buf)
++{
++	struct pci_dev *pci = to_pci_dev(priv->device);
++	int devfn;
++
++	devfn = pci->devfn & 0x7;
++	ls_spiflash_read(devfn * MAC_OFFSET, buf, MAC_LEN);
++
++	return 0;
++}
++#endif
++
++
+ /**
+  * stmmac_check_ether_addr - check if the MAC addr is valid
+  * @priv: driver private structure
+@@ -2138,8 +2209,21 @@ static void stmmac_check_ether_addr(stru
+ {
+ 	if (!is_valid_ether_addr(priv->dev->dev_addr)) {
+ 		stmmac_get_umac_addr(priv, priv->hw, priv->dev->dev_addr, 0);
++#if defined(CONFIG_CPU_LOONGSON3)
++#if defined(__mips__)
++		if ((loongson_pch->type == LS7A) &&
++#else
++		if ((loongson_pch_type == LS7A) &&
++#endif
++			(!is_valid_ether_addr(priv->dev->dev_addr)))
++			stmmac_spi_flash_get_mac_addr(priv, priv->dev->dev_addr);
++#endif
+ 		if (!is_valid_ether_addr(priv->dev->dev_addr))
+ 			eth_hw_addr_random(priv->dev);
++
++		/* try to write the random mac_addr to nvmem mac cell */
++		ft_stmmac_nvmem_set_mac_addr(priv->device, priv->dev->dev_addr);
++
+ 		netdev_info(priv->dev, "device MAC address %pM\n",
+ 			    priv->dev->dev_addr);
+ 	}
+@@ -2541,9 +2625,9 @@ static int stmmac_hw_setup(struct net_de
+ 	priv->tx_lpi_timer = STMMAC_DEFAULT_TWT_LS;
+ 
+ 	if (priv->use_riwt) {
+-		ret = stmmac_rx_watchdog(priv, priv->ioaddr, MAX_DMA_RIWT, rx_cnt);
++		ret = stmmac_rx_watchdog(priv, priv->ioaddr, MIN_DMA_RIWT, rx_cnt);
+ 		if (!ret)
+-			priv->rx_riwt = MAX_DMA_RIWT;
++			priv->rx_riwt = MIN_DMA_RIWT;
+ 	}
+ 
+ 	if (priv->hw->pcs)
+@@ -2652,6 +2736,7 @@ static int stmmac_open(struct net_device
+ 		}
+ 	}
+ 
++#ifndef CONFIG_SW
+ 	/* Request the IRQ lines */
+ 	if (priv->lpi_irq > 0) {
+ 		ret = request_irq(priv->lpi_irq, stmmac_interrupt, IRQF_SHARED,
+@@ -2663,15 +2748,17 @@ static int stmmac_open(struct net_device
+ 			goto lpiirq_error;
+ 		}
+ 	}
+-
++#endif
+ 	stmmac_enable_all_queues(priv);
+ 	netif_tx_start_all_queues(priv->dev);
+ 
+ 	return 0;
+ 
++#ifndef CONFIG_SW
+ lpiirq_error:
+ 	if (priv->wol_irq != dev->irq)
+ 		free_irq(priv->wol_irq, dev);
++#endif
+ wolirq_error:
+ 	free_irq(dev->irq, dev);
+ irq_error:
+@@ -3680,6 +3767,7 @@ static int stmmac_set_features(struct ne
+  *  o Core interrupts to manage: remote wake-up, management counter, LPI
+  *    interrupts.
+  */
++extern unsigned long swich_bridge_addr;
+ static irqreturn_t stmmac_interrupt(int irq, void *dev_id)
+ {
+ 	struct net_device *dev = (struct net_device *)dev_id;
+diff -uprN kernel/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c kernel_new/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+--- kernel/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c	2021-09-24 17:53:53.475310092 +0800
++++ kernel_new/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c	2021-09-28 09:31:00.784462589 +0800
+@@ -394,7 +394,11 @@ int stmmac_mdio_register(struct net_devi
+ 			priv->plat->phy_addr = addr;
+ 
+ 		phy_attached_info(phydev);
+-		found = 1;
++		if (phydev->phy_id != 0) {
++			found = 1;
++			pr_info("%s: PHY ID is 0x%08x\n",
++				ndev->name, phydev->phy_id);
++		}
+ 	}
+ 
+ 	if (!found && !mdio_node) {
+diff -uprN kernel/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c kernel_new/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c
+--- kernel/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c	2021-09-24 17:53:53.475310092 +0800
++++ kernel_new/drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c	2021-09-28 09:31:00.784462589 +0800
+@@ -224,6 +224,70 @@ static const struct stmmac_pci_info quar
+ 	.setup = quark_default_data,
+ };
+ 
++static int loongson_default_data(struct pci_dev *pdev,
++				struct plat_stmmacenet_data *plat)
++{
++	/* Set common default data first */
++	common_default_data(plat);
++
++	plat->bus_id = PCI_DEVID(pdev->bus->number, pdev->devfn);
++	plat->phy_addr = -1;
++	plat->interface = PHY_INTERFACE_MODE_GMII;
++
++	plat->dma_cfg->pbl = 32;
++	plat->dma_cfg->pblx8 = true;
++	/*ls2h,ls2k,ls7a mcast filter register is 256bit.*/
++	plat->multicast_filter_bins = 256;
++	/* AXI (TODO) */
++
++	return 0;
++}
++
++static struct stmmac_pci_info loongson_pci_info = {
++	.setup = loongson_default_data,
++};
++#ifdef CONFIG_SW
++static int sich_set_default_info(struct pci_dev *pdev, struct plat_stmmacenet_data *plat)
++{
++	/* Set common default data first */
++	common_default_data(plat);
++
++	plat->bus_id = PCI_DEVID(pdev->bus->number, pdev->devfn);
++
++	if (pdev->device == PCI_DEVICE_ID_SICH_GMAC0) {
++		plat->phy_addr = 0;
++		plat->stmmac_index = 0;
++	} else if (pdev->device == PCI_DEVICE_ID_SICH_GMAC1) {
++		plat->phy_addr = 1;
++		plat->stmmac_index = 1;
++	}
++
++	pr_info("%s set default %s PHY addr: %d\n", __func__,
++	pci_name(pdev), plat->phy_addr);
++
++	plat->interface = PHY_INTERFACE_MODE_GMII;
++	plat->clk_csr = 2; /* clk_csr_i = 20-35MHz & MDC = clk_csr_i/16 */
++	plat->has_gmac = 1;
++	plat->force_sf_dma_mode = 1;
++
++	plat->mdio_bus_data->phy_reset = NULL;
++	plat->mdio_bus_data->phy_mask = 0;
++	plat->dma_cfg->pbl = 32;
++	plat->dma_cfg->pblx8 = true;
++	plat->dma_cfg->fixed_burst = 1;
++	/* Set default value for multicast hash bins */
++	plat->multicast_filter_bins = HASH_TABLE_SIZE;
++
++	/* Set default value for unicast filter entries */
++	plat->unicast_filter_entries = 1;
++	return 0;
++}
++
++
++static struct stmmac_pci_info sich_fixup_pci_info = {
++	.setup = sich_set_default_info,
++};
++#endif
+ /**
+  * stmmac_pci_probe
+  *
+@@ -290,6 +354,8 @@ static int stmmac_pci_probe(struct pci_d
+ 	res.addr = pcim_iomap_table(pdev)[i];
+ 	res.wol_irq = pdev->irq;
+ 	res.irq = pdev->irq;
++	if (pdev->vendor == PCI_VENDOR_ID_LOONGSON)
++		res.lpi_irq = pdev->irq + 1;
+ 
+ 	return stmmac_dvr_probe(&pdev->dev, plat, &res);
+ }
+@@ -354,6 +420,13 @@ static int __maybe_unused stmmac_pci_res
+ 
+ static SIMPLE_DEV_PM_OPS(stmmac_pm_ops, stmmac_pci_suspend, stmmac_pci_resume);
+ 
++#ifdef CONFIG_SW
++static void stmmac_pci_shutdown(struct pci_dev *pdev)
++{
++	pci_intx(pdev, 0);
++	stmmac_dvr_remove(&pdev->dev);
++}
++#endif
+ /* synthetic ID, no official vendor */
+ #define PCI_VENDOR_ID_STMMAC 0x700
+ 
+@@ -369,6 +442,11 @@ static const struct pci_device_id stmmac
+ 	STMMAC_DEVICE(STMMAC, STMMAC_DEVICE_ID, stmmac_pci_info),
+ 	STMMAC_DEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_MAC, stmmac_pci_info),
+ 	STMMAC_DEVICE(INTEL, STMMAC_QUARK_ID, quark_pci_info),
++	STMMAC_DEVICE(LOONGSON, PCI_DEVICE_ID_LOONGSON_GMAC, loongson_pci_info),
++#ifdef CONFIG_SW
++	{PCI_VDEVICE(JN, PCI_DEVICE_ID_SICH_GMAC0), (kernel_ulong_t)&sich_fixup_pci_info},
++	{PCI_VDEVICE(JN, PCI_DEVICE_ID_SICH_GMAC1), (kernel_ulong_t)&sich_fixup_pci_info},
++#endif
+ 	{}
+ };
+ 
+diff -uprN kernel/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c kernel_new/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+--- kernel/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c	2021-09-24 17:53:53.475310092 +0800
++++ kernel_new/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c	2021-09-28 09:31:00.784462589 +0800
+@@ -25,10 +25,31 @@
+ #include <linux/of_net.h>
+ #include <linux/of_device.h>
+ #include <linux/of_mdio.h>
++#include <linux/acpi.h>
++#include <linux/clk-provider.h>
++#include <linux/clkdev.h>
++#include <linux/nvmem-consumer.h>
++#include <linux/ft_mcuinfo.h>
++#include <asm/machine_t.h>
+ 
+ #include "stmmac.h"
+ #include "stmmac_platform.h"
+ 
++u8 mac_addr[ETH_ALEN];
++
++#define GMAC_ADDR_BASE 0x3C6A2CB00000
++#define GMAC_ADDR_TOP 0x3C6A2CBFFFFF
++
++#define GMAC0_BASE 0x2820c000
++#define GMAC1_BASE 0x28210000
++
++#define EFUSE_BASE 0x2820A000
++#define EF_GMAC_ID_OFFSET 0x38
++#define EF_CHIP_ID_OFFSET 0X10
++
++#define MAC_ADDR_HI 0x40
++#define MAC_ADDR_LO 0x44
++
+ #ifdef CONFIG_OF
+ 
+ /**
+@@ -607,6 +628,502 @@ void stmmac_remove_config_dt(struct plat
+ EXPORT_SYMBOL_GPL(stmmac_probe_config_dt);
+ EXPORT_SYMBOL_GPL(stmmac_remove_config_dt);
+ 
++#ifdef CONFIG_ACPI
++/**
++ * follow stmmax_axi_setup, parse acpi _DSD to setup AXI register
++ */
++static struct stmmac_axi *stmmac_axi_setup_acpi(struct platform_device *pdev)
++{
++	struct fwnode_handle *np = dev_fwnode(&(pdev->dev));
++	struct stmmac_axi *axi;
++
++	axi = devm_kzalloc(&pdev->dev, sizeof(*axi), GFP_KERNEL);
++	if (!axi) {
++		return ERR_PTR(-ENOMEM);
++	}
++	axi->axi_lpi_en = fwnode_property_read_bool(np, "snps,lpi_en");
++	axi->axi_xit_frm = fwnode_property_read_bool(np, "snps,xit_frm");
++	axi->axi_kbbe = fwnode_property_read_bool(np, "snps,axi_kbbe");
++	axi->axi_fb = fwnode_property_read_bool(np, "snps,axi_fb");
++	axi->axi_mb = fwnode_property_read_bool(np, "snps,axi_mb");
++	axi->axi_rb =  fwnode_property_read_bool(np, "snps,axi_rb");
++
++	if (fwnode_property_read_u32(np, "snps,wr_osr_lmt", &axi->axi_wr_osr_lmt))
++		axi->axi_wr_osr_lmt = 1;
++	if (fwnode_property_read_u32(np, "snps,rd_osr_lmt", &axi->axi_rd_osr_lmt))
++		axi->axi_rd_osr_lmt = 1;
++	fwnode_property_read_u32_array(np, "snps,blen", axi->axi_blen, AXI_BLEN);
++
++	return axi;
++}
++
++/**
++ * follow stmmac_mtl_setup -parse ACPI DSD parameters for multiple queues configuration
++ * 由于设备树没有配置该项，为简化实现，当前ACPI支持，仅设置rx、tx第一个队列参数
++ */
++static void stmmac_mtl_setup_acpi(struct platform_device *pdev,
++				  struct plat_stmmacenet_data *plat)
++{
++	plat->rx_queues_to_use = 1;
++	plat->tx_queues_to_use = 1;
++
++	/* First Queue must always be in DCB mode. As MTL_QUEUE_DCB = 1 we need
++	 * to always set this, otherwise Queue will be classified as AVB
++	 * (because MTL_QUEUE_AVB = 0).
++	 */
++	plat->rx_queues_cfg[0].mode_to_use = MTL_QUEUE_DCB;
++	plat->tx_queues_cfg[0].mode_to_use = MTL_QUEUE_DCB;
++
++	plat->rx_queues_cfg[0].use_prio = true;
++
++	plat->rx_queues_cfg[0].pkt_route = 0x0;
++
++	plat->rx_sched_algorithm = MTL_RX_ALGORITHM_SP;
++	plat->tx_sched_algorithm = MTL_TX_ALGORITHM_SP;
++
++	plat->tx_queues_cfg[0].use_prio = true;
++}
++
++/*
++bool fw_phy_is_fixed_link(struct fwnode_handle *np)
++{
++	return fwnode_property_present(np, "fixed-link");
++}
++
++
++int fw_phy_register_fixed_link(struct fwnode_handle *np)
++{
++	struct fixed_phy_status status = {};
++	u32 fixed_link_prop[5];
++	int size, err;
++
++	err = fwnode_property_read_u32_array(np, "fixed-link", &fixed_link_prop,size);
++	if (err) {
++		pr_err("----there is no fixed-link property in DSD--\n");
++		return 0;
++	}
++	status.link = 1;
++	status.duplex = fixed_link_prop[1];
++	status.speed = fixed_link_prop[2];
++	status.pause  = fixed_link_prop[3];
++	status.asym_pause = fixed_link_prop[4];
++
++	fixed_phy_register(PHY_POLL, &status, link_gpio,0);
++}
++*/
++
++/*
++ *分析ACPI的DSD参数配置PHY资源
++ */
++static int stmmac_acpi_phy(struct plat_stmmacenet_data *plat,
++			   struct fwnode_handle *np, struct device *dev)
++{
++	bool mdio = true;
++
++	/*
++	if (fw_phy_is_fixed_link(np)) {
++		if (fw_phy_register_fixed_link(np) < 0)
++			return -ENODEV;
++
++		pr_err("-----use fixed link phy---\n");
++		plat->phy_node = ;
++		mdio = false;
++	}
++*/
++	if (mdio)
++		plat->mdio_bus_data = devm_kzalloc(dev,
++					sizeof(struct stmmac_mdio_bus_data),
++					GFP_KERNEL);
++
++	return 0;
++}
++
++int fw_get_phy_mode(struct fwnode_handle *np)
++{
++	const char *pm;
++	int err, i;
++
++	err = fwnode_property_read_string(np, "phy-mode", &pm);
++	if (err < 0)
++		err = fwnode_property_read_string(np, "phy-connection-mode", &pm);
++	if (err < 0)
++		return err;
++
++	for (i = 0; i < PHY_INTERFACE_MODE_MAX; i++)
++		if (!strcasecmp(pm, phy_modes(i)))
++			return i;
++
++	return -ENODEV;
++
++}
++
++int stmmac_acpi_clock_setup(struct plat_stmmacenet_data *plat,
++				struct platform_device *pdev)
++{
++	struct fwnode_handle *np = dev_fwnode(&(pdev->dev));
++	struct device * dev = &pdev->dev;
++	struct clk * __maybe_unused clk = ERR_PTR(-ENODEV);
++	u64 clk_freq = 0;
++	int err;
++
++	err = fwnode_property_read_u64(np, "clock-frequency", &clk_freq);
++	if (err < 0) {
++		clk_freq = 125000000;	/* default to  125MHz clk */
++	}
++	plat->stmmac_clk = devm_clk_get(dev, dev_name(dev));
++	pr_info("get stmmac clk:%p", plat->stmmac_clk);
++	if (IS_ERR(plat->stmmac_clk)) {
++#ifdef	CONFIG_COMMON_CLK
++		clk = clk_register_fixed_rate(dev, dev_name(dev), NULL, 0, clk_freq);
++		if (IS_ERR(clk)) {
++			pr_err("register stmmac clk failed\n");
++				return -1;
++		}
++		if (clk_register_clkdev(clk, dev_name(dev), dev_name(dev)))
++			pr_err("register stmmac clkdev failed\n");
++		plat->stmmac_clk = clk;
++#else
++		pr_err("register stmmac clk failed(common clock not enabled)\n");
++		return -1;
++#endif
++	}
++	plat->clk_csr = STMMAC_CSR_250_300M;
++	pr_info("set stmmac_clk:%s", dev_name(dev));
++	clk_prepare_enable(plat->stmmac_clk);
++
++	plat->pclk = devm_clk_get(dev, "pclk");
++	if (IS_ERR(plat->pclk)) {
++		plat->pclk = NULL;
++	}
++	clk_prepare_enable(plat->pclk);
++
++	plat->clk_ptp_ref = devm_clk_get(dev, "ptp_ref");
++	if (IS_ERR(plat->clk_ptp_ref)) {
++		plat->clk_ptp_rate = clk_get_rate(plat->stmmac_clk);
++		plat->clk_ptp_ref = NULL;
++	}
++
++	plat->stmmac_rst = devm_reset_control_get(dev, STMMAC_RESOURCE_NAME);
++	if (IS_ERR(plat->stmmac_rst)) {
++		dev_info(dev, "no reset control found\n");
++		plat->stmmac_rst = NULL;
++	}
++
++	return 0;
++}
++
++static u64 check_efuse_gmac(void)
++{
++	void __iomem *efuse_base;
++	u32 offset;
++	u64 addr_ret;
++
++	efuse_base = ioremap(EFUSE_BASE, 8);
++	if (!efuse_base)
++		return 0;
++
++	/* check if write EF_CHIP_ID */
++	if (!(readl(efuse_base + EF_CHIP_ID_OFFSET) & (1 << 31)))
++		return 0;
++
++	offset = readl(efuse_base + EF_GMAC_ID_OFFSET);
++	if (offset >= 0xFD000)
++		offset += 0x800;
++
++	addr_ret = GMAC_ADDR_BASE + offset;
++	if (addr_ret > GMAC_ADDR_TOP)
++		return 0;
++
++	iounmap(efuse_base);
++	return addr_ret;
++}
++
++static void write_efuse_gmac(void __iomem *addr,
++			     u64 gmac_addr)
++{
++	u8 mac_id[6];
++	u32 temp;
++	int i;
++
++	for (i = 0; i < 6; i++)
++		mac_id[i] = (gmac_addr >> ((5 - i) * 8)) & 0xff;
++
++	temp = mac_id[0] | (mac_id[1] << 8) | (mac_id[2] << 16) |
++	       (mac_id[3] << 24);
++	writel(temp, addr + MAC_ADDR_LO);
++
++	temp = readl(addr + MAC_ADDR_HI) & ~(0xffff);
++	temp = temp | mac_id[4] | (mac_id[5] << 8);
++	writel(temp, addr + MAC_ADDR_HI);
++}
++
++static void stmmac_get_mac_addr_from_mac_reg(void __iomem *gmac_base,
++					     u8 *bios_mac)
++{
++	u32 mac_lo, mac_hi;
++
++	mac_lo = readl(gmac_base + MAC_ADDR_LO);
++	if (unlikely(!mac_lo))
++		return;
++
++	mac_hi = readl(gmac_base + MAC_ADDR_HI);
++	if (unlikely(!mac_hi))
++		return;
++
++	bios_mac[0] = mac_lo & 0xff;
++	bios_mac[1] = (mac_lo >> 8) & 0xff;
++	bios_mac[2] = (mac_lo >> 16) & 0xff;
++	bios_mac[3] = (mac_lo >> 24) & 0xff;
++	bios_mac[4] = mac_hi & 0xff;
++	bios_mac[5] = (mac_hi >> 8) & 0xff;
++}
++
++static void get_mac_addr_from_efuse(void __iomem *gmac_base, int bus_id,
++				    u8 *mac_addr)
++{
++	u64 gmac_addr;
++
++	gmac_addr = check_efuse_gmac();
++	if (likely(gmac_addr)) {
++		gmac_addr += bus_id == 0 ? 0 : 1;
++		/* save mac address from efuse to mac reg */
++		write_efuse_gmac(gmac_base, gmac_addr);
++	}
++	/* read mac addr from mac reg */
++	stmmac_get_mac_addr_from_mac_reg(gmac_base, mac_addr);
++}
++
++static void get_mac_addr_from_bios(void __iomem *gmac_base,
++				   u8 *mac_addr)
++{
++	/* read mac addr from mac reg */
++	stmmac_get_mac_addr_from_mac_reg(gmac_base, mac_addr);
++}
++
++static void random_mac_addr(int offset, int bus_id, u8 *mac_addr)
++{
++	random_ether_addr(mac_addr);
++	if (is_ft_mcu_ready()) {
++		mac_addr[5] += bus_id;
++		mac_addr[5] &= 0xff;
++		/* writeback random mac addr to eeprom */
++		ft_mcu_write(mac_addr, offset, ETH_ALEN);
++	}
++}
++
++static void kylin_get_mac_addr(int bus_id, u8 *mac_addr)
++{
++	void __iomem *gmac_base;
++	int offset = LAN_MAC_ADDR + bus_id * ETH_ALEN;
++
++	gmac_base = bus_id == 0 ? ioremap(GMAC0_BASE, 8) :
++				  ioremap(GMAC1_BASE, 8);
++	if (unlikely(!gmac_base)) {
++		pr_warn("Couldn't map GMAC BASE region\n");
++		return;
++	}
++
++	get_mac_addr_from_bios(gmac_base, mac_addr);
++	if (is_valid_ether_addr(mac_addr)) {
++		pr_info("mac addr from bios: %pM\n", mac_addr);
++		return;
++	}
++
++	get_mac_addr_from_efuse(gmac_base, bus_id, mac_addr);
++	if (is_valid_ether_addr(mac_addr)) {
++		pr_info("mac addr from efuse: %pM\n", mac_addr);
++		return;
++	}
++
++	random_mac_addr(offset, bus_id, mac_addr);
++
++	iounmap(gmac_base);
++}
++
++static int ft_stmmac_get_mac_addr(struct device *dev,
++				  unsigned char *mac_addr,
++				  int bus_id)
++{
++	struct fwnode_handle *np;
++	struct nvmem_cell *cell;
++	int ret = 0;
++
++	/* find mac_addr from dsdt fwnode */
++	np = dev_fwnode(dev);
++	ret = fwnode_property_read_u8_array(np, "mac-address", mac_addr, ETH_ALEN);
++	if (!ret)
++		return 0;
++
++	/* find mac_addr from nvmem cell */
++	if (is_ft_mcu_ready()) {
++		cell = nvmem_cell_get(dev, "mac-address");
++		if (!IS_ERR(cell)) {
++			size_t len;
++			char *val = nvmem_cell_read(cell, &len);
++
++			if (!IS_ERR(val)) {
++				if (len == ETH_ALEN)
++					memcpy(mac_addr, val, ETH_ALEN);
++				kfree(val);
++			}
++			nvmem_cell_put(cell);
++
++			return 0;
++		}
++	}
++
++	if (is_ft2000_pc()) {
++		kylin_get_mac_addr(bus_id, mac_addr);
++		return 0;
++	}
++
++	return 1;
++}
++
++/*
++ * stmmac_probe_config_acpi- parse ACPI driver parameters
++ */
++struct plat_stmmacenet_data *stmmac_probe_config_acpi(struct platform_device *pdev, const char **mac)
++{
++	struct fwnode_handle *np;
++	struct plat_stmmacenet_data *plat;
++	struct stmmac_dma_cfg *dma_cfg;
++	char *uid;
++	int ret;
++
++	plat = devm_kzalloc(&pdev->dev, sizeof(*plat), GFP_KERNEL);
++	if (!plat)
++		return ERR_PTR(-ENOMEM);
++
++	np = dev_fwnode(&(pdev->dev));
++
++	/*
++	 * 由于ACPI表格没有配置MAC地址，可跳过mac地址设置，若需要，可从fwnode节点获取对应属性
++	 */
++	/*
++	*mac = fw_get_mac_address(np);
++	*/
++
++	/* 获取phy_mode，将of版本改为fwnode版本 */
++	plat->interface = fw_get_phy_mode(np);
++
++	/* Get max speed of operation from device tree */
++	if (fwnode_property_read_u32(np, "max-speed", &plat->max_speed))
++		plat->max_speed = -1;
++
++	/* get bus_id */
++	uid = acpi_device_uid(ACPI_COMPANION(&pdev->dev));
++	plat->bus_id = *uid - '0';
++	if (plat->bus_id < 0)
++		plat->bus_id = 0;
++
++	/* get mac address */
++	memset(mac_addr, 0, ETH_ALEN);
++	ret = ft_stmmac_get_mac_addr(&pdev->dev, mac_addr, plat->bus_id);
++	if (!ret)
++		*mac = mac_addr;
++
++	/* Default to phy auto-detection */
++	plat->phy_addr = -1;
++
++	/* "snps,phy-addr" is not a standard property. Mark it as deprecated
++	 * and warn of its use. Remove this when phy node support is added.
++	 */
++	if (fwnode_property_read_u32(np, "snps,phy-addr", &plat->phy_addr) == 0)
++		dev_warn(&pdev->dev, "snps,phy-addr property is deprecated\n");
++
++	/*
++	 * 此处有较大疑问，怎么设置phy_node属性，不设置的话，最后没有PHY设备，导致后续无法连接PHY错误
++	 */
++	if (stmmac_acpi_phy(plat, np, &pdev->dev))
++		return ERR_PTR(-ENODEV);
++
++	fwnode_property_read_u32(np, "tx-fifo-depth", &plat->tx_fifo_size);
++	fwnode_property_read_u32(np, "rx-fifo-depth", &plat->rx_fifo_size);
++
++	if (plat->tx_fifo_size == 0)
++		plat->tx_fifo_size = 0x10000;
++
++	if (plat->rx_fifo_size == 0)
++		plat->rx_fifo_size = 0x10000;
++
++	plat->force_sf_dma_mode =
++		fwnode_property_read_bool(np, "snps,force_sf_dma_mode");
++
++	plat->en_tx_lpi_clockgating =
++		fwnode_property_read_bool(np, "snps,en-tx-lpi-clockgating");
++
++	/*
++	 * Set the maxmtu to a default of JUMBO_LEN in case the
++	 * parameter is not present .
++	 */
++	plat->maxmtu = JUMBO_LEN;
++
++	/* Set default value for multicast hash bins */
++	plat->multicast_filter_bins = HASH_TABLE_SIZE;
++
++	/* Set default value for unicast filter entries */
++	plat->unicast_filter_entries = 1;
++
++	/* only to "snps,dwmac" */
++	fwnode_property_read_u32(np, "max-frame-size", &plat->maxmtu);
++	fwnode_property_read_u32(np, "snps,multicast-filter-bins",
++					&plat->multicast_filter_bins);
++	fwnode_property_read_u32(np, "snps,perfect-filter-entries",
++					&plat->unicast_filter_entries);
++	plat->unicast_filter_entries = dwmac1000_validate_ucast_entries(
++					plat->unicast_filter_entries);
++	plat->multicast_filter_bins = dwmac1000_validate_mcast_bins(
++					plat->multicast_filter_bins);
++	plat->has_gmac = 1;
++	plat->pmt = 1;
++
++	dma_cfg = devm_kzalloc(&pdev->dev, sizeof(*dma_cfg),
++				GFP_KERNEL);
++	if (!dma_cfg) {
++		/*
++		 * stmmac_remove_config_acpi(pdev,plat);释放对应的内存，待补充
++		 */
++		return ERR_PTR(-ENOMEM);
++	}
++	plat->dma_cfg = dma_cfg;
++
++	fwnode_property_read_u32(np, "snps,pbl", &dma_cfg->pbl);
++	if (!dma_cfg->pbl)
++		dma_cfg->pbl = DEFAULT_DMA_PBL;
++	fwnode_property_read_u32(np, "snps,txpbl", &dma_cfg->txpbl);
++	fwnode_property_read_u32(np, "snps,rxpbl", &dma_cfg->rxpbl);
++	dma_cfg->pblx8 = !fwnode_property_read_bool(np, "snps,no-pbl-x8");
++
++	dma_cfg->aal = fwnode_property_read_bool(np, "snps,aal");
++	dma_cfg->fixed_burst = fwnode_property_read_bool(np, "snps,fixed-burst");
++	dma_cfg->mixed_burst = fwnode_property_read_bool(np, "snps,mixed-burst");
++
++	plat->force_thresh_dma_mode = fwnode_property_read_bool(np, "snps,force_thresh_dma_mode");
++	if (plat->force_thresh_dma_mode) {
++		plat->force_sf_dma_mode = 0;
++		pr_warn("force_sf_dma_mode is ignored if force_thresh_dma_mode is set.");
++	}
++
++	fwnode_property_read_u32(np, "snps,ps-speed", &plat->mac_port_sel_speed);
++
++	plat->axi = stmmac_axi_setup_acpi(pdev);
++
++	stmmac_mtl_setup_acpi(pdev, plat);
++
++	stmmac_acpi_clock_setup(plat, pdev);
++
++	return plat;
++}
++#else
++struct plat_stmmacenet_data *
++stmmac_probe_config_acpi(struct platform_device *pdev, const char **mac)
++{
++	return ERR_PTR(-EINVAL);
++}
++#endif /* CONFIG_ACPI */
++EXPORT_SYMBOL_GPL(stmmac_probe_config_acpi);
++
+ int stmmac_get_platform_resources(struct platform_device *pdev,
+ 				  struct stmmac_resources *stmmac_res)
+ {
+@@ -617,33 +1134,43 @@ int stmmac_get_platform_resources(struct
+ 	/* Get IRQ information early to have an ability to ask for deferred
+ 	 * probe if needed before we went too far with resource allocation.
+ 	 */
+-	stmmac_res->irq = platform_get_irq_byname(pdev, "macirq");
+-	if (stmmac_res->irq < 0) {
+-		if (stmmac_res->irq != -EPROBE_DEFER) {
+-			dev_err(&pdev->dev,
+-				"MAC IRQ configuration information not found\n");
++	if (pdev->dev.of_node) {
++		stmmac_res->irq = platform_get_irq_byname(pdev, "macirq");
++		if (stmmac_res->irq < 0) {
++			if (stmmac_res->irq != -EPROBE_DEFER) {
++				dev_err(&pdev->dev,
++						"MAC IRQ configuration information not found\n");
++			}
++			return stmmac_res->irq;
++		}
++
++		/* On some platforms e.g. SPEAr the wake up irq differs from the mac irq
++		 * The external wake up irq can be passed through the platform code
++		 * named as "eth_wake_irq"
++		 *
++		 * In case the wake up interrupt is not passed from the platform
++		 * so the driver will continue to use the mac irq (ndev->irq)
++		 */
++		stmmac_res->wol_irq = platform_get_irq_byname(pdev, "eth_wake_irq");
++		if (stmmac_res->wol_irq < 0) {
++			if (stmmac_res->wol_irq == -EPROBE_DEFER)
++				return -EPROBE_DEFER;
++			stmmac_res->wol_irq = stmmac_res->irq;
+ 		}
+-		return stmmac_res->irq;
+-	}
+ 
+-	/* On some platforms e.g. SPEAr the wake up irq differs from the mac irq
+-	 * The external wake up irq can be passed through the platform code
+-	 * named as "eth_wake_irq"
+-	 *
+-	 * In case the wake up interrupt is not passed from the platform
+-	 * so the driver will continue to use the mac irq (ndev->irq)
+-	 */
+-	stmmac_res->wol_irq = platform_get_irq_byname(pdev, "eth_wake_irq");
+-	if (stmmac_res->wol_irq < 0) {
+-		if (stmmac_res->wol_irq == -EPROBE_DEFER)
++		stmmac_res->lpi_irq = platform_get_irq_byname(pdev, "eth_lpi");
++		if (stmmac_res->lpi_irq == -EPROBE_DEFER)
+ 			return -EPROBE_DEFER;
++	} else if (has_acpi_companion(&pdev->dev)) {
++		stmmac_res->irq = platform_get_irq(pdev, 0);
++		if (stmmac_res->irq < 0) {
++			dev_err(&pdev->dev, "MAC IRQ info not found!\n");
++		}
+ 		stmmac_res->wol_irq = stmmac_res->irq;
++		/* there is no such irq desc in devtree, here we ignore this irq */
++		stmmac_res->lpi_irq = -1;
+ 	}
+ 
+-	stmmac_res->lpi_irq = platform_get_irq_byname(pdev, "eth_lpi");
+-	if (stmmac_res->lpi_irq == -EPROBE_DEFER)
+-		return -EPROBE_DEFER;
+-
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	stmmac_res->addr = devm_ioremap_resource(&pdev->dev, res);
+ 
+diff -uprN kernel/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.h kernel_new/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.h
+--- kernel/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.h	2021-09-24 17:53:53.475310092 +0800
++++ kernel_new/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.h	2021-09-28 09:31:00.784462589 +0800
+@@ -22,6 +22,9 @@
+ #include "stmmac.h"
+ 
+ struct plat_stmmacenet_data *
++stmmac_probe_config_acpi(struct platform_device *pdev, const char **mac);
++
++struct plat_stmmacenet_data *
+ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac);
+ void stmmac_remove_config_dt(struct platform_device *pdev,
+ 			     struct plat_stmmacenet_data *plat);
+diff -uprN kernel/include/linux/ft_mcuinfo.h kernel_new/include/linux/ft_mcuinfo.h
+--- kernel/include/linux/ft_mcuinfo.h	1970-01-01 08:00:00.000000000 +0800
++++ kernel_new/include/linux/ft_mcuinfo.h	2021-09-28 09:31:00.784462589 +0800
+@@ -0,0 +1,34 @@
++/*
++ * Copyright (c) 2016, Fuzhou Rockchip Electronics Co., Ltd
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or (at
++ * your option) any later version.
++ */
++
++#ifndef __FT_MCUINFO_H__
++#define __FT_MCUINFO_H__
++
++#include <linux/types.h>
++
++#define LAN_MAC_ADDR    0xA0
++
++struct ft_mcuinfo_ops {
++	int (*read)(u8 *buf, loff_t off, size_t count);
++	int (*write)(u8 *buf, loff_t off, size_t count);
++};
++
++#ifdef CONFIG_FT_MCUINFO
++int ft_mcu_read(u8 *buf, loff_t off, size_t count);
++int ft_mcu_write(u8 *buf, loff_t off, size_t count);
++int ft_mcuinfo_register(struct ft_mcuinfo_ops *ops);
++bool is_ft_mcu_ready(void);
++#else
++static inline int ft_mcu_read(u8 *buf, loff_t off, size_t count) { return -1; }
++static inline int ft_mcu_write(u8 *buf, loff_t off, size_t count) { return -1; }
++static inline int ft_mcuinfo_register(struct ft_mcuinfo_ops *ops) { return -1; }
++static inline bool is_ft_mcu_ready(void) { return false; }
++#endif
++
++#endif
