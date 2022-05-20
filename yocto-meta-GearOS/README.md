@@ -1,6 +1,6 @@
 **介绍**：
 
-yocto-meta-GerOS核心是构建Yocto Poky之上，但针对openEuler 做了定制化修改，如下为通过Yocto Poky构建GearOS过程；
+yocto-meta-GerOS核心是构建Yocto Poky之上，但针对openEuler-21.09 做了定制化修改，如下为通过Yocto Poky构建GearOS过程；
 
 **开发机注意：**
 
@@ -40,7 +40,8 @@ source oe-init-build-env
 ```
 **4、添加openeuler layer**
 
-解压meta-openeuler-21.09.tar.gz之后放到pory文件夹下
+[下载meta-openeuler-21.09之后放到pory文件夹下](https://gitee.com/openeuler/GearOS/tree/GearOS-2022.05/yocto-meta-GearOS/meta-openeuler-21.09)
+
 ```
 hy@zhy-virtual-machine:~/GearOS/poky$ ls -l
 total 88
@@ -66,6 +67,20 @@ lrwxrwxrwx  1 GearOS GearOS    21 11月 29 09:09 README.poky -> meta-poky/README
 -rw-rw-r--  1 GearOS GearOS   529 11月 29 09:09 README.qemu
 drwxrwxr-x  8 GearOS GearOS  4096 11月 29 09:09 scripts
 ```
+如下为meta-openeuler-21.09目录下源文件的路径
+
+在poky/meta-openeuler-21.09/source_file目录下执行dowmload.sh脚本即可获取源码
+```
+/GearOS/poky/meta-openeuler-21.09/source_file$ ls
+acl    busybox         cracklib     e2fsprogs  gawk    grep         iputils     libcap-ng     libidn2       libunistring  make       openssh  perl-libxml-perl  rpcbind           tar
+at     bzip2           cronie       ed         gcc     gzip         iSulad      libevent      libmnl        libxml2       mc         openssl  popt              sed               time
+attr   clibcni         curl         elfutils   glib2   http-parser  kmod        libevhtp      libpwquality  logrotate     ncurses    pam      procps-ng         shadow            util-linux
+audit  copy_source.sh  diffutils    ethtool    glibc   initscripts  less        libffi        libseccomp    lxc           nettle     patch    psmisc            shared-mime-info  xz
+bash   coreutils       dowmload.sh  file       gmp     iproute      libarchive  libgcrypt     libtasn1      lz4           net-tools  pcre2    readline          sudo              zlib
+bc     cpio            dpkg         findutils  gnutls  iptables     libcap      libgpg-error  libtirpc      m4            nfs-utils  perl     rng-tools         sysfsutils
+
+```
+
 修改poky\build\conf\bblayers.conf文件在BBLAYERS中添加openeuler layer
 ```
 BBLAYERS ?= " \
@@ -86,9 +101,13 @@ PARALLEL_MAKE = '-j 32'
 INHERIT += "extrausers"
 EXTRA_USERS_PARAMS += "usermod -P 123456 root;"
 hostname_pn-base-files = "GearOS"
+PREFERRED_VERSION_glibc="2.34"
+PREFERRED_VERSION_gcc="10.3"
 ```
 **6、编译构建GearOS**
 ```
 bitbake core-image-full-cmdline
 ```
 注意：不能使用root用户
+
+编译之后生成镜像在poky\build\tmp\deploy\images\qemuarm64目录下
