@@ -80,6 +80,7 @@ bash   coreutils       dowmload.sh  file       gmp     iproute      libarchive  
 bc     cpio            dpkg         findutils  gnutls  iptables     libcap      libgpg-error  libtirpc      m4            nfs-utils  perl     rng-tools         sysfsutils
 
 ```
+在poky/meta-openeuler-21.09/source_file目录下执行copy_source.sh脚本添加meta-openeuler-21.09源到meta-openeuler-21.09的layer
 
 修改poky\build\conf\bblayers.conf文件在BBLAYERS中添加openeuler layer
 ```
