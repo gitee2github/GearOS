@@ -89,7 +89,7 @@ BBLAYERS ?= " \
     /GearOS/poky/meta-yocto-bsp \
     /GearOS/poky/meta-openeuler-21.09 \
 ```
-注：路径合mete路径一样；
+注：路径与mete路径一样；
 
 **5、修改配置文件 local.conf**
 在pory/build
