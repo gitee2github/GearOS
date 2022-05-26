@@ -1,0 +1,65 @@
+diff -uprN busybox-1.30.1/coreutils/date.c busybox-1.30.1_new/coreutils/date.c
+--- busybox-1.30.1/coreutils/date.c	2019-02-14 21:31:15.000000000 +0800
++++ busybox-1.30.1_new/coreutils/date.c	2021-11-19 11:24:55.481618392 +0800
+@@ -278,7 +278,11 @@ int date_main(int argc UNUSED_PARAM, cha
+ #else
+ 		time(&ts.tv_sec);
+ #endif
++
+ 	}
++#if !ENABLE_FEATURE_DATE_NANO
++	ts.tv_nsec = 0;
++#endif
+ 	localtime_r(&ts.tv_sec, &tm_time);
+ 
+ 	/* If date string is given, update tm_time, and maybe set date */
+@@ -301,9 +305,10 @@ int date_main(int argc UNUSED_PARAM, cha
+ 		if (date_str[0] != '@')
+ 			tm_time.tm_isdst = -1;
+ 		ts.tv_sec = validate_tm_time(date_str, &tm_time);
++		ts.tv_nsec = 0;
+ 
+ 		/* if setting time, set it */
+-		if ((opt & OPT_SET) && stime(&ts.tv_sec) < 0) {
++		if ((opt & OPT_SET) && clock_settime(CLOCK_REALTIME, &ts) < 0) {
+ 			bb_perror_msg("can't set date");
+ 		}
+ 	}
+diff -uprN busybox-1.30.1/libbb/missing_syscalls.c busybox-1.30.1_new/libbb/missing_syscalls.c
+--- busybox-1.30.1/libbb/missing_syscalls.c	2018-12-05 22:44:34.000000000 +0800
++++ busybox-1.30.1_new/libbb/missing_syscalls.c	2021-11-19 11:25:29.031571891 +0800
+@@ -15,14 +15,6 @@ pid_t getsid(pid_t pid)
+ 	return syscall(__NR_getsid, pid);
+ }
+ 
+-int stime(const time_t *t)
+-{
+-	struct timeval tv;
+-	tv.tv_sec = *t;
+-	tv.tv_usec = 0;
+-	return settimeofday(&tv, NULL);
+-}
+-
+ int sethostname(const char *name, size_t len)
+ {
+ 	return syscall(__NR_sethostname, name, len);
+diff -uprN busybox-1.30.1/util-linux/rdate.c busybox-1.30.1_new/util-linux/rdate.c
+--- busybox-1.30.1/util-linux/rdate.c	2018-12-30 23:14:20.000000000 +0800
++++ busybox-1.30.1_new/util-linux/rdate.c	2021-11-19 11:27:02.691438509 +0800
+@@ -95,9 +95,13 @@ int rdate_main(int argc UNUSED_PARAM, ch
+ 	if (!(flags & 2)) { /* no -p (-s may be present) */
+ 		if (time(NULL) == remote_time)
+ 			bb_error_msg("current time matches remote time");
+-		else
+-			if (stime(&remote_time) < 0)
+-				bb_perror_msg_and_die("can't set time of day");
++		else {
++			struct timespec ts;
++			ts.tv_sec = remote_time;
++			ts.tv_nsec = 0;
++			if (clock_settime(CLOCK_REALTIME, &ts) < 0)
++ 				bb_simple_perror_msg_and_die("can't set time of day");
++		}
+ 	}
+ 
+ 	if (flags != 1) /* not lone -s */
