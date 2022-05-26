@@ -57,7 +57,7 @@ IDE
 4.  initramfs.img为常规文件系统
 
 #### 构建GearOS
-[构建GearOS核心是构建Yocto Poky之上，但针对meta-openeuler-21.09 的需求做了大量的定制化的修改](https://gitee.com/openeuler/GearOS/blob/GearOS-2022.05/yocto-meta-GearOS/README.md)
+[构建GearOS核心是构建Yocto Poky之上，但针对meta-openeuler-21.09 的需求做了大量的定制化的修改](https://gitee.com/zhangyuge001/GearOS/blob/master/yocto-meta-GearOS/README.md)
 
 #### 参与贡献
 |姓名   | 公司      | Gitee ID          |邮箱|
