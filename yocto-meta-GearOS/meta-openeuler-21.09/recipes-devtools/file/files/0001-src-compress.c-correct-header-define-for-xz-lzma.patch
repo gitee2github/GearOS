@@ -1,0 +1,12 @@
+diff -uprN file-5.38/src/compress.c file-5.38_new/src/compress.c
+--- file-5.38/src/compress.c	2019-10-05 02:46:10.000000000 +0800
++++ file-5.38_new/src/compress.c	2021-11-25 17:58:15.727219295 +0800
+@@ -71,7 +71,7 @@ typedef void (*sig_t)(int);
+ #include <bzlib.h>
+ #endif
+ 
+-#if defined(HAVE_XZLIB_H) || defined(XZLIBSUPPORT)
++#if defined(HAVE_LZMA_H) && defined(XZLIBSUPPORT)
+ #define BUILTIN_XZLIB
+ #include <lzma.h>
+ #endif

@@ -1,0 +1,16 @@
+--- kernel/include/asm-generic/xenomai/syscall.h	2020-02-04 01:35:56.000000000 +0800
++++ kernel_new/include/asm-generic/xenomai/syscall.h	2021-04-07 13:58:24.939549909 +0800
+@@ -27,13 +27,8 @@
+ #include <asm/xenomai/machine.h>
+ #include <cobalt/uapi/asm-generic/syscall.h>
+ 
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 0, 0)
+ #define access_rok(addr, size)	access_ok((addr), (size))
+ #define access_wok(addr, size)	access_ok((addr), (size))
+-#else
+-#define access_rok(addr, size)	access_ok(VERIFY_READ, (addr), (size))
+-#define access_wok(addr, size)	access_ok(VERIFY_WRITE, (addr), (size))
+-#endif
+ 
+ #define __xn_reg_arglist(regs)	\
+ 	__xn_reg_arg1(regs),	\

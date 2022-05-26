@@ -1,0 +1,14 @@
+diff -uprN kernel/arch/arm64/include/asm/assembler.h kernel_new/arch/arm64/include/asm/assembler.h
+--- kernel/arch/arm64/include/asm/assembler.h	2021-09-24 17:53:47.395317270 +0800
++++ kernel_new/arch/arm64/include/asm/assembler.h	2021-09-27 15:20:29.946535242 +0800
+@@ -71,6 +71,10 @@
+ 	msr	daif, \flags
+ 	.endm
+ 
++	.macro  enable_irq
++	msr     daifclr, #2
++	.endm
++
+ 	.macro	enable_dbg
+ 	msr	daifclr, #8
+ 	.endm

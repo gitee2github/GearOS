@@ -1,0 +1,55 @@
+From 20576addae44d7256617806e4504524e0d1c9b13 Mon Sep 17 00:00:00 2001
+From: Shijie Luo <luoshijie1@huawei.com>
+Date: Sun, 15 Mar 2020 14:15:42 -0400
+Subject: [PATCH 7/7] bypass wrong output when enabled selinux
+
+When enforced selinux, excuting command getfattr may output something
+about selinux. Bypass these messages to make testcases go success.
+
+Signed-off-by: Shijie Luo <luoshijie1@huawei.com>
+---
+ test/run | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
+
+diff --git a/test/run b/test/run
+index 07e916c..7e46a70 100755
+--- a/test/run
++++ b/test/run
+@@ -160,21 +160,27 @@ sub process_test($$$$) {
+              map { s/\s/\\$&/g; $_ } @$p), " -- ";
+        my $result = exec_test($prog, $in);
+        my @good = ();
+-       my $nmax = (@$out > @$result) ? @$out : @$result;
+-       for (my $n=0; $n < $nmax; $n++) {
++       my $nmax = @$out;
++       my $mmax = @$result;
++       for (my $n=0, my $m=0; $n < $nmax; $n++, $m++) {
+ 	   my $use_re;
++
+ 	   if (defined $out->[$n] && $out->[$n] =~ /^~ /) {
+ 		$use_re = 1;
+ 		$out->[$n] =~ s/^~ //g;
+ 	   }
+ 
+-           if (!defined($out->[$n]) || !defined($result->[$n]) ||
+-               (!$use_re && $result->[$n] ne $out->[$n]) ||
+-               ( $use_re && $result->[$n] !~ /^$out->[$n]/)) {
+-               push @good, ($use_re ? '!~' : '!=');
++	   while ($m < $mmax &&
++		  (!$use_re && $result->[$m] ne $out->[$n]) ||
++		  ( $use_re && $result->[$m] !~ /^$out->[$n]/)) {
++		$m++;
++	   }
++
++	   if (!defined($result->[$m])) {
++		push @good, ($use_re ? '!~' : '!=');
+ 	   }
+ 	   else {
+-               push @good, ($use_re ? '=~' : '==');
++		push @good, ($use_re ? '=~' : '==');
+            }
+        }
+        my $good = !(grep /!/, @good);
+-- 
+1.8.3.1
+

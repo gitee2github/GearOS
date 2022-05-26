@@ -56,25 +56,17 @@ IDE
 3.  initramfs-minimal.img为使用busybox制作的文件系统镜像
 4.  initramfs.img为常规文件系统
 
+#### 构建GearOS
+[构建GearOS核心是构建Yocto Poky之上，但针对meta-openeuler-21.09 的需求做了大量的定制化的修改](https://gitee.com/openeuler/GearOS/blob/GearOS-2022.05/yocto-meta-GearOS/README.md)
+
 #### 参与贡献
-
-姓名	公司	Gitee ID	邮箱
-
-郭皓	麒麟软件	guohaocs2c	guohao@kylinos.cn
-
-马玉昆	麒麟软件	kylin-mayukun	mayukun@kylinos.cn
-
-吴春光	麒麟软件	wuchunguang	wuchunguang@kylinos.cn
-
-丁丽丽	麒麟软件	blueskycs2c	dinglili@kylinos.cn
-
-张继文	麒麟软件	zhang-jiwen	zhangjiwen@kylinos.cn
-
-张茜	麒麟软件	zxiiiii	zhangxi@kylinos.cn
-
-黎亮	华为	liliang_euler	liliang889@huawei.com
-
-张攀	华为	SuperHugePan	zhangpan26@huawei.com
-
-
-
+|姓名   | 公司      | Gitee ID          |邮箱|
+|------ | --------- | ----------------- | ------------------|
+|郭皓   |   麒麟软件| 	guohaocs2c      |guohao@kylinos.cn|
+|马玉昆 |   麒麟软件|   kylin-mayukun   |guohao@kylinos.cn|
+|吴春光 |   麒麟软件	|wuchunguang    |wuchunguang@kylinos.cn|
+|丁丽丽 |	麒麟软件|	blueskycs2c	    |dinglili@kylinos.cn|
+|张继文 |	麒麟软件|	zhang-jiwen	    |zhangjiwen@kylinos.cn|
+|张茜   |	麒麟软件|	zxiiiii         |zhangxi@kylinos.cn|
+|黎亮   |	华为    |	liliang_euler   |liliang889@huawei.com|
+|张攀   |	华为    |	SuperHugePan    |zhangpan26@huawei.com|
