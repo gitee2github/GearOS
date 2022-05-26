@@ -40,7 +40,7 @@ source oe-init-build-env
 ```
 **4、添加openeuler layer**
 
-[下载meta-openeuler-21.09之后放到pory文件夹下](https://gitee.com/openeuler/GearOS/tree/GearOS-2022.05/yocto-meta-GearOS/meta-openeuler-21.09)
+[下载meta-GearOS-21.09之后放到pory文件夹下](https://gitee.com/zhangyuge001/GearOS/tree/master/yocto-meta-GearOS)
 
 ```
 hy@zhy-virtual-machine:~/GearOS/poky$ ls -l
@@ -55,7 +55,7 @@ drwxrwxr-x 18 GearOS GearOS  4096 11月 29 09:09 documentation
 -rw-rw-r--  1 GearOS GearOS  1222 11月 29 09:09 Makefile
 -rw-rw-r--  1 GearOS GearOS   244 11月 29 09:09 MEMORIAM
 drwxrwxr-x 19 GearOS GearOS  4096 11月 30 16:22 meta
-drwxrwxrwx  9 GearOS GearOS  4096 5月  17 17:08 meta-openeuler-21.09
+drwxrwxrwx  9 GearOS GearOS  4096 5月  17 17:08 meta-GearOS-21.09
 drwxrwxr-x  5 GearOS GearOS  4096 11月 29 09:09 meta-poky
 drwxrwxr-x  9 GearOS GearOS  4096 11月 29 09:09 meta-selftest
 drwxrwxr-x  8 GearOS GearOS  4096 11月 29 09:09 meta-skeleton
@@ -67,11 +67,25 @@ lrwxrwxrwx  1 GearOS GearOS    21 11月 29 09:09 README.poky -> meta-poky/README
 -rw-rw-r--  1 GearOS GearOS   529 11月 29 09:09 README.qemu
 drwxrwxr-x  8 GearOS GearOS  4096 11月 29 09:09 scripts
 ```
-如下为meta-openeuler-21.09目录下源文件的路径
-
-在poky/meta-openeuler-21.09/source_file目录下执行dowmload.sh脚本即可获取源码
+如下为yocto-meta-GearOS目录下源文件的路径
 ```
-/GearOS/poky/meta-openeuler-21.09/source_file$ ls
+/GearOS/poky/meta-GearOS-21.09# ls -l
+total 40
+drwxr-xr-x  2 root root 4096 May 26 09:17 conf
+-rwxr-xr-x  1 root root 1035 May 26 09:17 COPYING.MIT
+-rwxr-xr-x  1 root root  849 May 26 09:17 README
+drwxr-xr-x  6 root root 4096 May 26 09:17 recipes-connectivity
+drwxr-xr-x 10 root root 4096 May 26 09:17 recipes-core
+drwxr-xr-x 10 root root 4096 May 26 09:17 recipes-devtools
+drwxr-xr-x 31 root root 4096 May 26 09:17 recipes-extended
+drwxr-xr-x  4 root root 4096 May 26 09:17 recipes-kernel
+drwxr-xr-x 17 root root 4096 May 26 09:17 recipes-support
+drwxr-xr-x  2 root root 4096 May 26 09:17 source_file
+
+```
+在poky/meta-GearOS-21.09/source_file目录下执行dowmload.sh脚本即可获取源码
+```
+/GearOS/poky/meta-GearOS-21.09/source_file$ ls
 acl    busybox         cracklib     e2fsprogs  gawk    grep         iputils     libcap-ng     libidn2       libunistring  make       openssh  perl-libxml-perl  rpcbind           tar
 at     bzip2           cronie       ed         gcc     gzip         iSulad      libevent      libmnl        libxml2       mc         openssl  popt              sed               time
 attr   clibcni         curl         elfutils   glib2   http-parser  kmod        libevhtp      libpwquality  logrotate     ncurses    pam      procps-ng         shadow            util-linux
@@ -80,7 +94,7 @@ bash   coreutils       dowmload.sh  file       gmp     iproute      libarchive  
 bc     cpio            dpkg         findutils  gnutls  iptables     libcap      libgpg-error  libtirpc      m4            nfs-utils  perl     rng-tools         sysfsutils
 
 ```
-在poky/meta-openeuler-21.09/source_file目录下执行copy_source.sh脚本添加meta-openeuler-21.09源到meta-openeuler-21.09的layer
+在poky/meta-GearOS-21.09/source_file目录下执行copy_source.sh脚本添加meta-GearOS-21.09源到meta-GearOS-21.09的layer
 
 修改poky\build\conf\bblayers.conf文件在BBLAYERS中添加openeuler layer
 ```
@@ -88,7 +102,7 @@ BBLAYERS ?= " \
     /GearOS/poky/meta \
     /GearOS/poky/meta-poky \
     /GearOS/poky/meta-yocto-bsp \
-    /GearOS/poky/meta-openeuler-21.09 \
+    /GearOS/poky/meta-GearOS-21.09 \
 ```
 注：路径与mete路径一样；
 
