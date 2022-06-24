@@ -41,9 +41,12 @@ for file in ./*
 done
 cp ./libxml2/libxml2-2.9.10.tar.gz ../recipes-core/libxml/libxml2/libxml2-2.9.10.tar.gz
 cp ./perl-libxml-perl/libxml-perl-0.08.tar.gz ../recipes-devtools/perl/files/libxml-perl-0.08.tar.gz
-cp ./perl/perl-5.32.0.tar.xz ../recipes-devtools/perl/files/perl-5.32.0.tar.xz
+#cp ./perl/perl-5.32.0.tar.xz ../recipes-devtools/perl/files/perl-5.32.0.tar.xz
 cp ./gzip/gzip-1.10.tar.xz ../recipes-extended/gzip/files/gzip-1.10.tar.xz
 cp ./libidn2/libidn2-2.3.0.tar.gz ../recipes-extended/libidn/libidn2/libidn2-2.3.0.tar.gz
 cp ./libtasn1/libtasn1-4.16.0.tar.gz  ../recipes-support/gnutls/libtasn1/libtasn1-4.16.0.tar.gz
 cp ./iproute/iproute2-5.10.0.tar.xz ../recipes-connectivity/iproute2/iproute2/iproute2-5.10.0.tar.xz
-
+cp ./ethercat-igh/ethercat-1.5.2.tar.bz2 ../recipes-connectivity/ethercat/ethercat/ethercat-1.5.2.tar.bz2
+cp ./busybox/busybox-1.33.1.tar.bz2 ../recipes-core/busybox/busybox/busybox-1.33.1.tar.bz2
+cp ./glibc/glibc-2.34.tar.xz ../recipes-core/glibc/glibc/glibc-2.34.tar.xz
+#cp ./glibc/ldconfig-native-2.12.1/glibc-2.34.tar.xz ../recipes-core/glibc/glibc/glibc-2.34.tar.xz

@@ -88,4 +88,5 @@
   git clone -b openEuler-21.09 https://gitee.com/src-openeuler/lxc.git
   git clone -b openEuler-21.09 https://gitee.com/src-openeuler/pam.git
   git clone -b openEuler-21.09 https://gitee.com/src-openeuler/dpkg.git
+  git clone  https://gitee.com/src-openeuler/ethercat-igh.git
   
