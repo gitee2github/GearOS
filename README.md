@@ -68,6 +68,5 @@ IDE
 |张远航 |	麒麟软件|	zhangyh1992    |zhangyuanhang@kylinos.cn|
 |李钰磊 |	麒麟软件|	r2018    |liyulei@kylinos.com|
 |张玉 |	麒麟软件|	zhangyuge001	    |zhangyu4@kylinos.cn|
-|张茜   |	麒麟软件|	zxiiiii         |zhangxi@kylinos.cn|
 |黎亮   |	华为    |	liliang_euler   |liliang889@huawei.com|
 |张攀   |	华为    |	SuperHugePan    |zhangpan26@huawei.com|
